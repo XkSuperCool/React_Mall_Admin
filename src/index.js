@@ -6,8 +6,6 @@ import App from './App.jsx';
 import store from './store';
 import 'antd/dist/antd.css';
 
-console.log(process.env.NODE_ENV);
-
 ReactDOM.render(
   <Provider store={ store }>
     <App />
