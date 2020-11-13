@@ -17,4 +17,8 @@ export default styled.div`
   .ant-form-item-label {
     padding-bottom: 0px;
   }
+
+  .captcha {
+    cursor: pointer;
+  }
 `;
