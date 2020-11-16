@@ -1,0 +1,1 @@
+export const CHANGE_ADMIN_INFO = 'CHANGE_ADMIN_INFO';

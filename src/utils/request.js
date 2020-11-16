@@ -1,11 +1,11 @@
 import axios from 'axios';
-import config from '../config';
+// import config from '../config';
 import { message as globalMessage } from 'antd';
 
-const baseURL = process.env.NODE_ENV === 'development' ? config.devBaseURL : config.proBaseURL;
+// const baseURL = process.env.NODE_ENV === 'development' ? config.devBaseURL : config.proBaseURL;
 
 const newAxios = axios.create({
-  baseURL: baseURL,
+  // baseURL: baseURL,
   timeout: 10000
 });
 
@@ -16,8 +16,8 @@ newAxios.interceptors.request.use((config) => {
 });
 
 newAxios.interceptors.response.use((response) => {
-  const { status, data, message } = response.data;
-  if (status !== 200) {
+  const { statusCode, data, message } = response.data;
+  if (statusCode !== 200) {
     globalMessage.error(message);
     return Promise.reject(message);
   }
