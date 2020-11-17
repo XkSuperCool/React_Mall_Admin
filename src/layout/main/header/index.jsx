@@ -10,7 +10,7 @@ function Header() {
   return (
     <HeaderWrapper>
       <div className='toggle'>
-        <MenuFoldOutlined onClick={ () => context.setSliderActive(true) } />
+        <MenuFoldOutlined onClick={ () => context.setSidebarActive(true) } />
       </div>
       <div>
         操作

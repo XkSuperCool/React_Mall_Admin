@@ -2,27 +2,27 @@ import React, { memo, useContext, useEffect, useState } from 'react';
 import { MenuFoldOutlined } from '@ant-design/icons';
 
 import Context from '../context';
-import SliderWrapper from './style';
-import SliderMenu from '../slider_menu';
+import SidebarWrapper from './style';
+import SidebarMenu from '../sidebar_menu';
 
-function Slider() {
+function Sidebar() {
   const context = useContext(Context);
-  const [sliderMini, setSliderMini] = useState(false);
+  const [sidebarMini, setSidebarMini] = useState(false);
 
   useEffect(() => {
     const onResize = () => {
       const clientWidth = document.body.clientWidth;
       switch(true) {
         case clientWidth >= 788 :
-          setSliderMini(false);
-          context.setSliderActive(false);
+          setSidebarMini(false);
+          context.setSidebarActive(false);
           break;
         case clientWidth >= 764 && clientWidth < 788 :
-          context.setSliderActive(false);
-          setSliderMini(true);
+          context.setSidebarActive(false);
+          setSidebarMini(true);
           break;
         case clientWidth <= 764 :
-          setSliderMini(false);
+          setSidebarMini(false);
           break;
         default : return;
       }
@@ -36,22 +36,22 @@ function Slider() {
   }, [context]);
 
   return (
-    <SliderWrapper>
-      <div className={ `slider ${ context.sliderActive ? 'slider-active' : '' } ${ sliderMini ? 'slider-mini' : '' }` }>
-        <div className='slider-content'>
+    <SidebarWrapper>
+      <div className={ `sidebar ${ context.sidebarActive ? 'sidebar-active' : '' } ${ sidebarMini ? 'sidebar-mini' : '' }` }>
+        <div className='sidebar-content'>
           <div className='logo'>
             Logo
           </div>
-          <SliderMenu inlineCollapsed={ sliderMini }></SliderMenu>
+          <SidebarMenu inlineCollapsed={ sidebarMini }></SidebarMenu>
           <div className='toggle'>
-            <MenuFoldOutlined onClick={ () => setSliderMini(!sliderMini) } />
+            <MenuFoldOutlined onClick={ () => setSidebarMini(!sidebarMini) } />
           </div>
         </div>
-        <div className='slider-curtain' onClick={ () => context.setSliderActive(false) }></div>
+        <div className='sidebar-curtain' onClick={ () => context.setSidebarActive(false) }></div>
       </div>
       <div className='foundation'></div>
-    </SliderWrapper>
+    </SidebarWrapper>
   );
 }
 
-export default memo(Slider);
+export default memo(Sidebar);

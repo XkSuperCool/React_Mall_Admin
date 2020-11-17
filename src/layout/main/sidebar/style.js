@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 export default styled.div`
   @media(max-width: 764px) {
-    .slider .slider-content {
+    .sidebar .sidebar-content {
       left: -208px;
       width: 208px;
     }
@@ -19,7 +19,7 @@ export default styled.div`
   }
 
   @media(min-width: 764px) {
-    .slider .slider-content {
+    .sidebar .sidebar-content {
       width: 48px;
     }
 
@@ -29,7 +29,7 @@ export default styled.div`
   }
 
   @media(min-width: 788px) {
-    .slider .slider-content {
+    .sidebar .sidebar-content {
       width: 208px;
     }
 
@@ -38,27 +38,27 @@ export default styled.div`
     }
   }
 
-  .slider-mini {
-    .slider-content {
+  .sidebar-mini {
+    .sidebar-content {
       width: 48px;
     }
   }
 
-  .slider-mini ~ .foundation {
+  .sidebar-mini ~ .foundation {
     width: 48px;
   }
 
-  .slider-active {
-    .slider-content {
+  .sidebar-active {
+    .sidebar-content {
       left: 0;
     }
 
-    .slider-curtain {
+    .sidebar-curtain {
       display: block;
     }
   }
 
- .slider-content {
+ .sidebar-content {
     height: 100%;
     position: absolute;
     z-index: 999;
@@ -73,7 +73,7 @@ export default styled.div`
     }
   }
 
-  .slider-curtain {
+  .sidebar-curtain {
     width: 100vw;
     height: 100vh;
     position: absolute;

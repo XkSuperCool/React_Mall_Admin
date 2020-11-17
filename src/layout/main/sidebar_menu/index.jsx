@@ -9,7 +9,7 @@ import {
 
 const { SubMenu } = Menu;
 
-function SliderMenu(props) {
+function SidebarMenu(props) {
   return (
     <Menu
       defaultSelectedKeys={['goods']}
@@ -37,4 +37,4 @@ function SliderMenu(props) {
   );
 }
 
-export default memo(SliderMenu);
+export default memo(SidebarMenu);
