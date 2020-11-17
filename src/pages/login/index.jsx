@@ -1,7 +1,9 @@
-import React, { memo, useCallback, useState } from 'react';
+import React, { memo, useCallback, useState, useEffect } from 'react';
+import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 import config from '@/config';
 import LoginWrapper from './style';
 import { Form, Input, Button, Row, Col } from 'antd';
+import { loginAdminAction } from './store/actioncreators';
 
 const baseUrl = process.env.NODE_ENV === 'development' ? config.devBaseURL : config.proBaseURL;
 const layout = {
@@ -12,13 +14,26 @@ const tailLayout = {
   wrapperCol: { offset: 10, span: 16 },
 };
 
-function Login() {
+function Login(props) {
   const [captchaUrl, setCaptchaUrl] = useState(baseUrl + '/admin/captcha');
   const [form] = Form.useForm();
+  const dispatch = useDispatch();
+  const { isLogin } = useSelector((state) => ({
+    isLogin: state.getIn(['adminInfo', 'admin_info']).username !== undefined,
+  }), shallowEqual);
+  
+  useEffect(() => {
+    if (isLogin) {
+      props.history.push('/');
+    }
+  }, [props, isLogin]);
 
-  const onFinish = useCallback((value) => {
-    console.log(value)
-  }, []);
+  const onFinish = useCallback(async (value) => {
+    const res = await dispatch(loginAdminAction(value));
+    if (res) {
+      props.history.push('/home');
+    }
+  }, [dispatch, props]);
 
   const changeCaptchaUrl = () => {
     setCaptchaUrl(`${baseUrl}/admin/captcha?id=${Date.now()}`);
@@ -78,7 +93,7 @@ function Login() {
         </Form>
       </div>
     </LoginWrapper>
-  )
+  );
 }
 
 export default memo(Login);

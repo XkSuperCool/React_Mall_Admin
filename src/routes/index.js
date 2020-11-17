@@ -2,7 +2,7 @@ import React, { lazy } from 'react';
 import { Redirect } from 'react-router-dom';
 
 // layout
-import Main from '../layout/Main';
+import Main from '../layout/main';
 
 // pages
 import Login from '../pages/login';
