@@ -7,6 +7,7 @@ import Main from '../layout/main';
 // pages
 import Login from '../pages/login';
 const Home = lazy(() => import('../pages/home'));
+const AccessList = lazy(() => import('../pages/access_list'));
 
 const routes = [
   {
@@ -26,6 +27,10 @@ const routes = [
         path: '/home',
         component: Home
       },
+      {
+        path: '/access/list',
+        component: AccessList
+      }
     ]
   },
 ]

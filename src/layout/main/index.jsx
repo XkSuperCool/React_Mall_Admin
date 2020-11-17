@@ -1,30 +1,28 @@
-import React, { memo, Suspense } from 'react';
+import React, { memo, Suspense, useState } from 'react';
 import { renderRoutes } from 'react-router-config';
 
+import Context from './context';
+import Sidebar from './sidebar';
+import Header from './header';
 import MainWrapper from './style';
 
 function Main(props) {
+  const [sidebarActive, setSidebarActive] = useState(false);
+
   return (
-    <Suspense fallback='loading...'>
-      <MainWrapper>
-        <div className='slider'>
-          Slider
-        </div>
+    <MainWrapper>
+      <Context.Provider value={{ sidebarActive, setSidebarActive }}>
+        <Sidebar></Sidebar>
         <div className='content'>
-          <header>
-            <div className='logo'>
-              <h1>Logo</h1>
-            </div>
-            <div>
-              操作
-            </div>
-          </header>
+          <Header></Header>
           <div className='main'>
-            { renderRoutes(props.route.routes) }
+            <Suspense fallback='loading...'>
+              { renderRoutes(props.route.routes) }
+            </Suspense>
           </div>
         </div>
-      </MainWrapper>
-    </Suspense>
+      </Context.Provider>
+    </MainWrapper>
   )
 }
 

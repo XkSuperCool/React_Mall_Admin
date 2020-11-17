@@ -19,12 +19,13 @@ function Login(props) {
   const [form] = Form.useForm();
   const dispatch = useDispatch();
   const { isLogin } = useSelector((state) => ({
-    isLogin: state.getIn(['adminInfo', 'admin_info']).username !== ''
+    isLogin: state.getIn(['adminInfo', 'admin_info']).username !== undefined,
   }), shallowEqual);
-  
+  console.log(props)
   useEffect(() => {
-    if (isLogin)
+    if (isLogin) {
       props.history.push('/');
+    }
   }, [props, isLogin]);
 
   const onFinish = useCallback(async (value) => {
