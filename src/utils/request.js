@@ -18,7 +18,7 @@ newAxios.interceptors.request.use((config) => {
 newAxios.interceptors.response.use((response) => {
   const { statusCode, data, message } = response.data;
   if (statusCode !== 200) {
-    globalMessage.error(message);
+    globalMessage.error(message ?? '请求出错，请稍后再试!');
     return Promise.reject(message);
   }
 

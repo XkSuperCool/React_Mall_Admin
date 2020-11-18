@@ -1,7 +1,8 @@
-import React, { memo, useState, useCallback } from 'react';
+import React, { memo, useState, useRef } from 'react';
+
 import { Breadcrumb, Table, Switch, Button } from 'antd';
 import AccessListWrapper from './style';
-import AccessModal from './modal';
+import { AccessModal } from './components';
 
 const columns = [
   {
@@ -136,15 +137,7 @@ const data = [
 
 function AccessList() {
   const [access, setAccess] = useState(null);
-  const [visible, setVisible] = useState(false);
-
-  const handleOk = useCallback(() => {
-    console.log('ok');
-  }, []);
-
-  const handleCancel = useCallback(() => {
-    setVisible(false);
-  }, []);
+  const accessModelRef = useRef();
 
   return (
     <>
@@ -154,7 +147,7 @@ function AccessList() {
       </Breadcrumb>
       <AccessListWrapper>
         <div className='operation'>
-          <Button type='primary' onClick={ () => setVisible(true) }>添加权限</Button>
+          <Button type='primary' onClick={ () => accessModelRef.current.showModal() }>添加权限</Button>
           <Button type='ghost'>导出表格</Button>
         </div>
         <Table
@@ -163,12 +156,7 @@ function AccessList() {
           dataSource={data}
         />
       </AccessListWrapper>
-      <AccessModal
-        data={ access }
-        visible={ visible }
-        handleOk={ handleOk }
-        handleCancel={ handleCancel }
-      />
+      <AccessModal data={ access } ref={ accessModelRef } />
     </>
   )
 }

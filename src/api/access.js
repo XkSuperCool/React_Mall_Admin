@@ -4,9 +4,11 @@ import request from '../utils/request';
  * 获取指定 type 的权限
  * @param {*} type
  */
-export const getAccessByType = (type) => {
+export const getAccess = (type) => {
+  let url = `/admin/access`;
+  url = type !== undefined ? `${url}/${type}` : url;
   return request({
-    url: `/admin/access/${ type }`,
+    url: url,
     method: 'get',
   });
 }

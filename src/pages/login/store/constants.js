@@ -1,1 +1,1 @@
-export const CHANGE_ADMIN_INFO = 'CHANGE_ADMIN_INFO';
+export const SET_ADMIN_INFO = 'SET_ADMIN_INFO';

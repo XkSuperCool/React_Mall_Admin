@@ -1,0 +1,2 @@
+export const SET_ACCESS_LIST = 'SET_ACCESS_LIST';
+export const SET_ACCESS_LIST_ALL = 'SET_ACCESS_LIST_ALL';

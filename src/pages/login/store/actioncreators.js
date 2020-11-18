@@ -1,11 +1,6 @@
-import { CHANGE_ADMIN_INFO } from './constants';
+import { SET_ADMIN_INFO } from './constants';
 import { loginAdmin } from '@/api/admin';
 
-// 修改管理员信息
-export const changeAdminInfoAction = (value) => ({
-  type: CHANGE_ADMIN_INFO,
-  value: value
-});
 
 // 登录
 export const loginAdminAction = (data) => {
@@ -13,7 +8,10 @@ export const loginAdminAction = (data) => {
     try {
       const result = await loginAdmin(data);
       sessionStorage.setItem('user_info', JSON.stringify(result));
-      dispatch(changeAdminInfoAction(result));
+      dispatch({
+        type: SET_ADMIN_INFO,
+        value: result
+      });
       return true;
     } catch {
       return false;

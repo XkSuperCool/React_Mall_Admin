@@ -21,7 +21,7 @@ function Login(props) {
   const { isLogin } = useSelector((state) => ({
     isLogin: state.getIn(['adminInfo', 'admin_info']).username !== undefined,
   }), shallowEqual);
-  console.log(props)
+
   useEffect(() => {
     if (isLogin) {
       props.history.push('/');
