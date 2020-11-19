@@ -17,13 +17,17 @@ function Main(props) {
           <Header></Header>
           <div className='main'>
             <Suspense fallback='loading...'>
-              { renderRoutes(props.route.routes) }
+              {
+                renderRoutes(
+                  props.route.routes
+                )
+              }
             </Suspense>
           </div>
         </div>
       </Context.Provider>
     </MainWrapper>
-  )
+  );
 }
 
 export default memo(Main);

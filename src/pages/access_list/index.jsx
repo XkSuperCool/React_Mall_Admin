@@ -1,7 +1,7 @@
 import React, { memo, useState, useRef, useEffect, useCallback } from 'react';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 
-import { Breadcrumb, Table, Switch, Button } from 'antd';
+import { Table, Switch, Button, PageHeader } from 'antd';
 import AccessListWrapper from './style';
 import { AccessModal } from './components';
 import { getAccessListAction } from './store/actioncreators';
@@ -11,6 +11,15 @@ const typeMap = {
   1: '菜单',
   2: '操作'
 };
+
+const breadcrumb = [
+  {
+    breadcrumbName: '权限管理',
+  },
+  {
+    breadcrumbName: '权限列表',
+  },
+]
 
 function AccessList() {
   const [access, setAccess] = useState(null);
@@ -93,10 +102,7 @@ function AccessList() {
 
   return (
     <>
-      <Breadcrumb>
-        <Breadcrumb.Item>权限管理</Breadcrumb.Item>
-        <Breadcrumb.Item>权限列表</Breadcrumb.Item>
-      </Breadcrumb>
+      <PageHeader className='page-header' title='权限列表' breadcrumb={{ routes: breadcrumb }} />
       <AccessListWrapper>
         <div className='operation'>
           <Button type='primary' onClick={ () => accessModelRef.current.showModal() }>添加权限</Button>

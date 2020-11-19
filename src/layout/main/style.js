@@ -10,12 +10,13 @@ export default styled.div`
     flex: auto;
     flex-direction: column;
     transition: padding .5s;
+    position: relative;
   }
 
   .main {
     height: 0;
     flex: auto;
     background-color: #F0F2F5;
-    padding: 10px 10px 0 10px;
+    padding: 50px 10px 0 10px;
   }
 `;
