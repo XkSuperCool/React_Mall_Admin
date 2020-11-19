@@ -32,20 +32,19 @@ newAxios.interceptors.response.use((response) => {
 
   if (error && error.response) {
     switch(error.response.status) {
-      case '400' :
-        globalMessage.error('请求错误!');
+      case 400 :
+        globalMessage.error(error.response.data.message ?? '请求错误!');
         break;
-      case '401' :
+      case 401 :
         globalMessage.error('未授权的访问!');
         break;
-      case '404' :
+      case 404 :
         globalMessage.error('请求的资源不存在!');
         break;
-      case '500' :
+      case 500 :
         globalMessage.error('内部错误请稍后重试!');
         break;
-      default :
-        globalMessage.error('出现未知错误，请稍后重试!');
+      default : globalMessage.error('出现未知错误，请稍后重试!');
     }
   }
 });

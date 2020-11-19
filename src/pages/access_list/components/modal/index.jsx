@@ -1,12 +1,14 @@
 import React, { memo, Fragment, useCallback, useRef, useState, useImperativeHandle, forwardRef } from 'react';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 
-import { getAccessList } from '../../store/actioncreators';
-import { Modal, Input, Form, Radio, Select, InputNumber, Row, Col, Switch } from 'antd';
+import { getAccessListAction } from '../../store/actioncreators';
+import { Modal, Input, Form, Radio, Select, InputNumber, Row, Col, Switch, message } from 'antd';
+import { addAccess } from '@/api/access';
 
 const { Option } = Select;
 
-const AccessModal = forwardRef(({ data }, ref) => {
+const AccessModal = forwardRef(({ data, onOk }, ref) => {
+  const isData = data !== null && Object.keys(data).length > 0;
   const [visible, setVisible] = useState(false);
   const [form] = Form.useForm();
   const dispatch = useDispatch();
@@ -22,7 +24,7 @@ const AccessModal = forwardRef(({ data }, ref) => {
   const handleTypeChange = useCallback((e) => {
     const type = e.target.value;
     if (type !== 0) {
-     dispatch(getAccessList(type - 1));
+      dispatch(getAccessListAction(type - 1));
     }
     // 重置 module_id
     form.setFieldsValue({ module_id: null })
@@ -33,15 +35,25 @@ const AccessModal = forwardRef(({ data }, ref) => {
     setVisible(false); // 隐藏弹出框
   }, [formRef]);
 
-  const handleFinish = useCallback((value) => {
-    console.log(value);
-  }, []);
-
+  const handleFinish = useCallback(async (value) => {
+    let success = false;
+    if (isData) {
+      // 修改
+    } else {
+      // 添加
+      success = await addAccess(value);
+    }
+    if (success) {
+      message.success('添加成功');
+      onCancel();
+      onOk();
+    }
+  }, [isData, onCancel, onOk]);
 
   return (
     <Modal
-      title={ data ? '编辑权限' : '添加权限' }
-      okText={ data ? '确定' : '创建' }
+      title={ isData ? '编辑权限' : '添加权限' }
+      okText={ isData ? '确定' : '创建' }
       cancelText='取消'
       visible={ visible }
       onOk={ () => formRef.current.submit() }
@@ -79,9 +91,9 @@ const AccessModal = forwardRef(({ data }, ref) => {
           rules={[{ required: true, message: '请选择权限类别!' }]}
         >
           <Radio.Group onChange={ handleTypeChange }>
-            <Radio value={ 0 }>模块</Radio>
-            <Radio value={ 1 }>菜单</Radio>
-            <Radio value={ 2 }>操作</Radio>
+            <Radio value={ '0' }>模块</Radio>
+            <Radio value={ '1' }>菜单</Radio>
+            <Radio value={ '2' }>操作</Radio>
           </Radio.Group>
         </Form.Item>
         <Form.Item
@@ -93,7 +105,7 @@ const AccessModal = forwardRef(({ data }, ref) => {
         </Form.Item>
         <Form.Item
           noStyle
-          shouldUpdate={ true }
+          shouldUpdate={(prevValues, currentValues) => prevValues.type !== currentValues.type}
         >
            {({ getFieldValue }) => {
               return (
@@ -104,8 +116,8 @@ const AccessModal = forwardRef(({ data }, ref) => {
                 >
                   <Select placeholder='请选择父级模块'>
                     {
-                      getFieldValue('type') === 0 ?
-                      <Option value={ 0 }>顶级模块（没有父级）</Option> :
+                      getFieldValue('type') === "0" ?
+                      <Option value={ "0" }>顶级模块（没有父级）</Option> :
                       (
                         <Fragment>
                           {

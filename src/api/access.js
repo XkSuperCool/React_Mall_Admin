@@ -12,3 +12,15 @@ export const getAccess = (type) => {
     method: 'get',
   });
 }
+
+/**
+ * 添加权限
+ * @param {object} data 
+ */
+export const addAccess = (data) => {
+  return request({
+    url: '/admin/access/create',
+    data: data,
+    method: 'post'
+  });
+}

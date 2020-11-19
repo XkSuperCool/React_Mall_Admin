@@ -1,143 +1,95 @@
-import React, { memo, useState, useRef } from 'react';
+import React, { memo, useState, useRef, useEffect, useCallback } from 'react';
+import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 
 import { Breadcrumb, Table, Switch, Button } from 'antd';
 import AccessListWrapper from './style';
 import { AccessModal } from './components';
+import { getAccessListAction } from './store/actioncreators';
 
-const columns = [
-  {
-    title: '排序',
-    dataIndex: 'sort',
-    key: 'sort',
-  },
-  {
-    title: '模块名称',
-    dataIndex: 'module_name',
-    key: 'module_name',
-  },
-  {
-    title: '动作名称',
-    dataIndex: 'action_name',
-    key: 'action_name',
-  },
-  {
-    title: '权限描述',
-    dataIndex: 'description',
-    key: 'description',
-  },
-  {
-    title: '权限类别',
-    dataIndex: 'type',
-    key: 'type',
-  },
-  {
-    title: '权限地址',
-    dataIndex: 'url',
-    key: 'url',
-  },
-  {
-    title: '权限状态',
-    dataIndex: 'status',
-    key: 'status',
-    render: (status) => <Switch defaultChecked={ status }/>
-  },
-  {
-    title: '父级模块',
-    dataIndex: 'module_id',
-    key: 'module_id',
-  },
-  {
-    title: '操作',
-    dataIndex: 'operation',
-    render: () => {
-      return (
-        <>
-          <Button type='link' size='small'>编辑</Button>
-          <Button type='link' size='small' danger>删除</Button>
-        </>
-      );
-    }
-  }
-];
-
-const data = [
-  {
-    sort: 1,
-    module_name: '管理员管理',
-    action_name: 'John Brown sr.',
-    description: '管理员管理',
-    type: 0,
-    url: '/api/admin',
-    status: true,
-    module_id: '123231',
-    _id: 1,
-    children: [
-      {
-        sort: 1,
-        module_name: '管理员管理',
-        action_name: 'John Brown sr.',
-        description: '管理员管理',
-        type: 0,
-        url: '/api/admin',
-        status: true,
-        module_id: '123231',
-        _id: 11,
-      },
-      {
-        sort: 1,
-        module_name: '管理员管理',
-        action_name: 'John Brown sr.',
-        description: '管理员管理',
-        type: 0,
-        url: '/api/admin',
-        status: true,
-        module_id: '123231',
-        _id: 122,
-        children: [
-          {
-            sort: 1,
-            module_name: '管理员管理',
-            action_name: 'John Brown sr.',
-            description: '管理员管理',
-            type: 0,
-            url: '/api/admin',
-            status: true,
-            module_id: '123231',
-            _id: 44,
-          },
-        ],
-      },
-      {
-        sort: 1,
-        module_name: '管理员管理',
-        action_name: 'John Brown sr.',
-        description: '管理员管理',
-        type: 0,
-        url: '/api/admin',
-        status: true,
-        module_id: '123231',
-        _id: 12312,
-        children: [
-          {
-            sort: 1,
-            module_name: '管理员管理',
-            action_name: 'John Brown sr.',
-            description: '管理员管理',
-            type: 0,
-            url: '/api/admin',
-            status: true,
-            module_id: '123231',
-            _id: 1321,
-          },
-        ],
-      },
-    ],
-  },
-];
+const typeMap = {
+  0: '模块',
+  1: '菜单',
+  2: '操作'
+};
 
 function AccessList() {
   const [access, setAccess] = useState(null);
   const accessModelRef = useRef();
+  const dispatch = useDispatch();
+
+  const { accessTreeList } = useSelector(store => ({
+    accessTreeList: store.getIn(['accessListInfo', 'treeList'])
+  }), shallowEqual);
+
+  const handleOk = useCallback(() => {
+    dispatch(getAccessListAction());
+  }, [dispatch]);
+
+  const handleDelete = useCallback(() => {
+    console.log('delete');
+  }, []);
+
+  const handleEdit = useCallback(() => {
+    setAccess({ module_name: 1, })
+    accessModelRef.current.showModal();
+  }, []);
+
+  useEffect(() => {
+    handleOk();
+  }, [handleOk]);
+
+
+  const columns = [
+    {
+      title: '模块名称',
+      dataIndex: 'module_name',
+      key: 'module_name',
+    },
+    {
+      title: '动作名称',
+      dataIndex: 'action_name',
+      key: 'action_name',
+    },
+    {
+      title: '权限描述',
+      dataIndex: 'description',
+      key: 'description',
+      render: (desc) => desc !== '' ? desc : '暂无描述'
+    },
+    {
+      title: '权限类别',
+      dataIndex: 'type',
+      key: 'type',
+      render: (type) => (
+        <span className={ `type-` + type }>{ typeMap[type] }</span>
+      )
+    },
+    {
+      title: '权限地址',
+      dataIndex: 'url',
+      key: 'url'
+    },
+    {
+      title: '权限状态',
+      dataIndex: 'status',
+      key: 'status',
+      render: (status) => <Switch defaultChecked={ status }/>
+    },
+    {
+      title: '操作',
+      dataIndex: 'operation',
+      render: () => {
+        return (
+          <>
+            <Button type='link' size='small' onClick={ handleEdit }>编辑</Button>
+            <Button type='link' size='small' danger onClick={ handleDelete }>
+              删除
+            </Button>
+          </>
+        );
+      }
+    }
+  ];
 
   return (
     <>
@@ -153,10 +105,14 @@ function AccessList() {
         <Table
           rowKey='_id'
           columns={columns}
-          dataSource={data}
+          dataSource={accessTreeList}
         />
       </AccessListWrapper>
-      <AccessModal data={ access } ref={ accessModelRef } />
+      <AccessModal
+        data={ access }
+        onOk={ handleOk }
+        ref={ accessModelRef }
+      />
     </>
   )
 }

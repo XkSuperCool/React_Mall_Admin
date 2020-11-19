@@ -8,4 +8,16 @@ export default styled.div`
   .ant-btn {
     margin-right: 10px;
   }
+
+  .type-0 {
+    color: #1890FF;
+  }
+
+  .type-1 {
+    color: #239a05;
+  }
+
+  .type-2 {
+    color: #da7915fa;
+  }
 `;
