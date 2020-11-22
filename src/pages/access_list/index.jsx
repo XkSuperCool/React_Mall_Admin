@@ -19,7 +19,7 @@ const breadcrumb = [
   {
     breadcrumbName: '权限列表',
   },
-]
+];
 
 function AccessList() {
   const [access, setAccess] = useState(null);

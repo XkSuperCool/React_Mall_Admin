@@ -22,7 +22,7 @@ newAxios.interceptors.response.use((response) => {
     return Promise.reject(message);
   }
 
-  return data;
+  return data ?? true;
 }, (error) => {
   if (/timeout\sof\s\d+ms\sexceeded/.test(error.message)) {
     // 超时

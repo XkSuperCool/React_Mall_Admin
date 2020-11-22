@@ -8,6 +8,7 @@ import Main from '../layout/main';
 import Login from '../pages/login';
 const Home = lazy(() => import('../pages/home'));
 const AccessList = lazy(() => import('../pages/access_list'));
+const RoleList = lazy(() => import('../pages/role_list'));
 
 const routes = [
   {
@@ -30,6 +31,10 @@ const routes = [
       {
         path: '/access/list',
         component: AccessList
+      },
+      {
+        path: '/role/list',
+        component: RoleList
       }
     ]
   },
