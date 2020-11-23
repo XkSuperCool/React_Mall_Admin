@@ -19,7 +19,7 @@ const AccessModal = forwardRef(({ data, onOk }, ref) => {
 
   useImperativeHandle(ref, () => ({
     showModal: () => setVisible(true)
-  }));
+  }), []);
 
   const handleTypeChange = useCallback((e) => {
     const type = e.target.value;

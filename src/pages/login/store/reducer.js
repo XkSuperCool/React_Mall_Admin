@@ -1,8 +1,9 @@
 import { Map } from 'immutable';
 import { SET_ADMIN_INFO } from './constants';
 
+const adminInfo = sessionStorage.getItem('admin_info');
 const initState = Map({
-  admin_info: sessionStorage.getItem('admin_info') ?? {}
+  admin_info: adminInfo ? JSON.parse(adminInfo) : {}
 });
 
 export default function adminReducer(state = initState, action) {

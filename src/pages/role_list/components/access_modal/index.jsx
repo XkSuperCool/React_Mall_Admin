@@ -1,6 +1,5 @@
 import React, { memo, useState, useEffect, useCallback, useImperativeHandle, forwardRef } from 'react';
 import { Modal, Tree, Spin, message } from 'antd';
-import { BranchesOutlined } from '@ant-design/icons';
 import { getRoleAccess, setToleAccess } from '@/api/role';
 
 // 生成 antd 需要的树形结构
@@ -25,14 +24,10 @@ const AccessModal = forwardRef((props, ref) => {
 
   useImperativeHandle(ref, () => ({
     showAccessModal: () => setVisible(true)
-  }));
+  }), []);
 
   useEffect(() => {
     if (props.roleId === undefined) return;
-    setTreeData({
-      data: [],
-      keys: []
-    });
     getRoleAccess(props.roleId).then(res => {
       const tree = generateTree(res.tree);
       setTreeData({
@@ -44,9 +39,15 @@ const AccessModal = forwardRef((props, ref) => {
 
   const handleCheck = useCallback((checkedKeys) => {
     setToleAccess(props.roleId, checkedKeys).then(res => {
-      if (res) message.success('权限修改成功');
+      if (res) {
+        setTreeData({
+          data: treeData.data,
+          keys: checkedKeys
+        });
+        message.success('权限修改成功');
+      }
     });
-  }, [props]);
+  }, [props, treeData]);
 
   return (
     <>
@@ -65,8 +66,9 @@ const AccessModal = forwardRef((props, ref) => {
           treeData={treeData.data}
           checkable={true}
           showLine={{ showLeafIcon: false }}
-          defaultCheckedKeys={treeData.keys}
+          checkedKeys={treeData.keys}
           defaultExpandAll={true}
+          selectable={false}
           onCheck={handleCheck}
         /> : <Spin />
       }

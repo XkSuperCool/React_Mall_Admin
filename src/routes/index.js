@@ -6,6 +6,7 @@ import Main from '../layout/main';
 
 // pages
 import Login from '../pages/login';
+import NotFound from '../pages/not_found';
 const Home = lazy(() => import('../pages/home'));
 const AccessList = lazy(() => import('../pages/access_list'));
 const RoleList = lazy(() => import('../pages/role_list'));
@@ -18,26 +19,38 @@ const routes = [
   {
     path: '/',
     exact: true,
-    render: () => <Redirect to='/home' />,
+    component: () => <Redirect to='/m' />,
   },
   {
-    path: '/',
+    path: '/m',
     component: Main,
     routes: [
       {
-        path: '/home',
+        path: '/m',
+        exact: true,
+        auth: true,
         component: Home
       },
       {
-        path: '/access/list',
+        path: '/m/access/list',
+        auth: true,
         component: AccessList
       },
       {
-        path: '/role/list',
+        path: '/m/role/list',
+        auth: true,
         component: RoleList
+      },
+      {
+        path: '*',
+        component: NotFound
       }
     ]
   },
+  {
+    path: '*',
+    component: NotFound
+  }
 ]
 
 

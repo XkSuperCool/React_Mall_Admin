@@ -7,7 +7,7 @@ export const loginAdminAction = (data) => {
   return async (dispatch) => {
     try {
       const result = await loginAdmin(data);
-      sessionStorage.setItem('user_info', JSON.stringify(result));
+      sessionStorage.setItem('admin_info', JSON.stringify(result));
       dispatch({
         type: SET_ADMIN_INFO,
         value: result

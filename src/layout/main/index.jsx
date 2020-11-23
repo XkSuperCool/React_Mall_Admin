@@ -6,6 +6,8 @@ import Sidebar from './sidebar';
 import Header from './header';
 import MainWrapper from './style';
 
+import useRouterGuard from '@/hooks/useRouterGuard';
+
 function Main(props) {
   const [sidebarActive, setSidebarActive] = useState(false);
 
@@ -19,7 +21,7 @@ function Main(props) {
             <Suspense fallback='loading...'>
               {
                 renderRoutes(
-                  props.route.routes
+                  useRouterGuard(props.route.routes)
                 )
               }
             </Suspense>

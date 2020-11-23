@@ -11,10 +11,15 @@ function SidebarMenu(props) {
     props.history.push(key);
   }, [props.history]);
 
+  const path = props.location.pathname;
+  const openKey = path.match(/\/m\/([a-z]+)\/[a-z]+/);
+
   return (
     <Menu
-      defaultSelectedKeys={['goods']}
-      defaultOpenKeys={['goods']}
+      selectedKeys={[path]}
+      defaultOpenKeys={[
+        openKey ? openKey[1] : ''
+      ]}
       mode='inline'
       theme='dark'
       inlineIndent={ 10 }
@@ -23,17 +28,17 @@ function SidebarMenu(props) {
       onClick={ handleClickMenu }
     >
       <SubMenu key='goods' icon={ <Icon type='icon-shangpin' /> } title='商品管理'>
-        <Menu.Item key='/goods-1'>商品管理</Menu.Item>
-        <Menu.Item key='/goods-2'>添加商品</Menu.Item>
+        <Menu.Item key='/m/goods/admin'>商品管理</Menu.Item>
+        <Menu.Item key='/m/goods/add'>添加商品</Menu.Item>
       </SubMenu>
       <SubMenu key='role' icon={ <Icon type='icon-jiaoseguanli' /> } title='角色管理'>
-        <Menu.Item key='/role/list'>角色列表</Menu.Item>
+        <Menu.Item key='/m/role/list'>角色列表</Menu.Item>
       </SubMenu>
       <SubMenu key='access' icon={ <Icon type='icon-quanxianshezhi' /> } title='权限管理'>
-        <Menu.Item key='/access/list'>权限列表</Menu.Item>
+        <Menu.Item key='/m/access/list'>权限列表</Menu.Item>
       </SubMenu>
       <SubMenu key='admin' icon={ <Icon type='icon-guanliyuan' /> } title='管理员管理'>
-        <Menu.Item key='/admin/list'>管理员列表</Menu.Item>
+        <Menu.Item key='/m/admin/list'>管理员列表</Menu.Item>
       </SubMenu>
     </Menu>
   );

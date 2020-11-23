@@ -20,4 +20,9 @@ export default styled.div`
   .type-2 {
     color: #da7915fa;
   }
+
+  .ant-tag {
+    cursor: pointer;
+    user-select: none;
+  }
 `;

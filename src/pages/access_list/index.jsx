@@ -1,7 +1,7 @@
 import React, { memo, useState, useRef, useEffect, useCallback } from 'react';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 
-import { Table, Switch, Button, PageHeader } from 'antd';
+import { Table, Switch, Button, Tag, PageHeader } from 'antd';
 import AccessListWrapper from './style';
 import { AccessModal } from './components';
 import { getAccessListAction } from './store/actioncreators';
@@ -87,13 +87,16 @@ function AccessList() {
     {
       title: '操作',
       dataIndex: 'operation',
+      width: 200,
       render: () => {
         return (
           <>
-            <Button type='link' size='small' onClick={ handleEdit }>编辑</Button>
-            <Button type='link' size='small' danger onClick={ handleDelete }>
+            <Tag color='processing' onClick={ handleEdit }>
+              编辑
+            </Tag>
+            <Tag color='error' onClick={ handleDelete }>
               删除
-            </Button>
+            </Tag>
           </>
         );
       }
