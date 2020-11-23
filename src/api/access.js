@@ -24,3 +24,16 @@ export const addAccess = (data) => {
     method: 'post'
   });
 }
+
+/**
+ * 获取角色的权限 urls
+ * @param {string} roleId 
+ */
+export const getAdminAccessUrls = (roleId) => {
+  return request({
+    url: '/admin/role/access/urls',
+    params: {
+      roleId
+    }
+  });
+}
