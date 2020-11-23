@@ -2,13 +2,16 @@ import request from '@/utils/request';
 
 export const getRoleList = () => {
   return request({
-    url: '/admin/role'
+    url: '/admin/role/all'
   });
 }
 
 export const getRoleAccess = (user_id) => {
   return request({
-    url: `/admin/role/access/${user_id}`
+    url: `/admin/role/access`,
+    params: {
+      id: user_id
+    }
   });
 }
 

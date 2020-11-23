@@ -6,7 +6,7 @@ import request from '../utils/request';
  */
 export const getAccess = (type) => {
   let url = `/admin/access`;
-  url = type !== undefined ? `${url}/${type}` : url;
+  url = type !== undefined ? `${url}?type=${type}` : url + '/all';
   return request({
     url: url,
     method: 'get',
