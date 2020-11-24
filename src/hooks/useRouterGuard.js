@@ -1,27 +1,36 @@
+import { useEffect } from 'react';
 import { useSelector, shallowEqual } from 'react-redux';
-import { Redirect, useLocation } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 
-function useRouterGuard(routes, authPaths) {
-  const location = useLocation();
-  const { isLogin } = useSelector(state => ({
-    isLogin: state.getIn(['adminInfo', 'admin_info']).username ? true : false
-  }), shallowEqual);
-
-
-  return routes.map(item => {
-    if (item.auth) {
+function loginCheck(routes, isLogin) {
+  for (const route of routes) {
+    if (route.auth) {
       if (isLogin === false) {
-        item.render = () => <Redirect to='/login' />;
+        route.render = () => <Redirect to='/login' />;
       } else {
-        if (authPaths) {
-          // url 校验
-          console.log(location.pathname);
-        }
-        delete item.render;
+        delete route.render;
       }
     }
-    return item;
-  });
+    
+    if (route.routes && route.routes.length) {
+      loginCheck(route.routes, isLogin);
+    }
+  }
+}
+
+function useRouterGuard(routes) {
+  const { info } = useSelector(state => ({
+    info: state.getIn(['adminInfo', 'admin_info'])
+  }), shallowEqual);
+  
+  useEffect(() => {
+    const isLogin = info.username ? true : false;
+    // 登录验证
+    loginCheck(routes, isLogin);
+  }, [routes, info]);
+
+  return routes;
 }
 
 export default useRouterGuard;
+;

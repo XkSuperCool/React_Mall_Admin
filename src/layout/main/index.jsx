@@ -1,27 +1,25 @@
-import React, { memo, Suspense, useState, useEffect } from 'react';
+import React, { memo, Suspense, useState } from 'react';
 import { renderRoutes } from 'react-router-config';
-import { useSelector, shallowEqual } from 'react-redux';
 
 import Context from './context';
 import Sidebar from './sidebar';
 import Header from './header';
 import MainWrapper from './style';
-import { getAdminAccessUrls } from '@/api/access';
-
-import useRouterGuard from '@/hooks/useRouterGuard';
 
 function Main(props) {
   const [sidebarActive, setSidebarActive] = useState(false);
-  const [urls, setUrls] = useState([]);
-  const { roleId } = useSelector(state => ({
-    roleId: state.getIn(['adminInfo', 'admin_info']).role_id
-  }), shallowEqual);
 
-  useEffect(() => {
-    getAdminAccessUrls(roleId).then(urls => {
-      setUrls(urls);
-    });
-  }, [roleId]);
+  // useEffect(() => {
+  //   const admin_info = sessionStorage.getItem('admin_info');
+  //   if (admin_info === null) {
+  //     return props.history.push('/login');
+  //   }
+  //   const { role_id } = JSON.parse(admin_info);
+  //   getAdminAccessUrls(role_id).then(urls => {
+  //     setUrls(urls);
+  //   });
+  //   console.log(12312)
+  // }, [props]);
 
   return (
     <MainWrapper>
@@ -32,9 +30,7 @@ function Main(props) {
           <div className='main'>
             <Suspense fallback='loading...'>
               {
-                renderRoutes(
-                  useRouterGuard(props.route.routes, urls)
-                )
+                renderRoutes(props.route.routes)
               }
             </Suspense>
           </div>
