@@ -43,7 +43,7 @@ const routes = [
       },
       {
         path: '*',
-        component: NotFound
+        render: () => <Redirect to='/not/fond' />,
       }
     ]
   },
