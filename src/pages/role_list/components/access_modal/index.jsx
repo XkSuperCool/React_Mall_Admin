@@ -1,6 +1,6 @@
 import React, { memo, useState, useEffect, useCallback, useImperativeHandle, forwardRef } from 'react';
 import { Modal, Tree, Spin, message } from 'antd';
-import { getRoleAccess, setToleAccess } from '@/api/role';
+import { getRoleAccess, setRoleAccess } from '@/api/role';
 
 // 生成 antd 需要的树形结构
 function generateTree(arr) {
@@ -38,7 +38,7 @@ const AccessModal = forwardRef((props, ref) => {
   }, [props]);
 
   const handleCheck = useCallback((checkedKeys) => {
-    setToleAccess(props.roleId, checkedKeys).then(res => {
+    setRoleAccess(props.roleId, checkedKeys).then(res => {
       if (res) {
         setTreeData({
           data: treeData.data,

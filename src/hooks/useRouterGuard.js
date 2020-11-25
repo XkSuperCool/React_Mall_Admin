@@ -1,36 +1,47 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useSelector, shallowEqual } from 'react-redux';
 import { Redirect } from 'react-router-dom';
+import { getAdminAccessUrls } from '@/api/access';
 
-function loginCheck(routes, isLogin) {
-  for (const route of routes) {
-    if (route.auth) {
-      if (isLogin === false) {
-        route.render = () => <Redirect to='/login' />;
-      } else {
-        delete route.render;
-      }
-    }
-    
-    if (route.routes && route.routes.length) {
-      loginCheck(route.routes, isLogin);
-    }
-  }
-}
-
-function useRouterGuard(routes) {
+function useRouterGuard(routes, authURL) {
+  const routesRef = useRef(routes);
   const { info } = useSelector(state => ({
     info: state.getIn(['adminInfo', 'admin_info'])
   }), shallowEqual);
-  
-  useEffect(() => {
-    const isLogin = info.username ? true : false;
-    // 登录验证
-    loginCheck(routes, isLogin);
-  }, [routes, info]);
 
-  return routes;
+  useEffect(() => {
+    routesRef.current = routes.map(item => {
+      const route = { ...item };
+      if (route.auth) {
+        if (info.username === undefined) {
+          route.render = () => <Redirect to='/login' />;
+        } else if (route.render) {
+          delete route.render;
+        }
+      }
+      return route;
+    });
+  }, [info, routes]);
+
+  useEffect(() => {
+    if (info.role_id !== undefined && authURL) {
+      getAdminAccessUrls(info.role_id).then(urls => {
+        routesRef.current = routes.map(item => {
+          const route = { ...item };
+          if (route.auth && info.is_super === false) {
+            if (urls.includes(route.path) === false) {
+              route.render = () => <Redirect to='*' />;
+            } else if (route.render) {
+              delete route.render;
+            }
+          }
+          return route;
+        });
+      });
+    }
+  }, [info, routes, authURL]);
+  
+  return routesRef.current;
 }
 
 export default useRouterGuard;
-;

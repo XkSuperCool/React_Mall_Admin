@@ -1,9 +1,11 @@
 import React, { Fragment, memo, useEffect, useRef, useState, useCallback } from 'react';
 import { useDispatch, useSelector, shallowEqual } from 'react-redux';
-import { PageHeader, Table, Switch, Tag } from 'antd';
+import { PageHeader, Table, Tag, Button, message, Popconfirm } from 'antd';
 import RoleListWrapper from './style';
 import { getRoleListAction } from './store/actioncreators';
-import { AccessModal } from './components';
+import { AccessModal, RoleModal } from './components';
+
+import { deleteRole } from '@/api/role';
 
 const breadcrumb = [
   {
@@ -16,8 +18,10 @@ const breadcrumb = [
 
 function RoleList() {
   const [currentRoleId, setCurrentRoleId] = useState();
+  const [roleData, setRoleData] = useState(null);
   const dispatch = useDispatch();
   const accessModalRef = useRef();
+  const roleModalRef = useRef();
   const { list } = useSelector(state => ({
     list: state.getIn(['roleListInfo', 'roleList'])
   }), shallowEqual);
@@ -27,6 +31,23 @@ function RoleList() {
     setCurrentRoleId(_id);
     accessModalRef.current.showAccessModal();
   }, []);
+
+  const handleShowModal = useCallback((value) => {
+    if (typeof value === 'undefined') {
+      setRoleData(null);
+    } else if (typeof value === 'object') {
+      setRoleData(value);
+    }
+    roleModalRef.current.showModal();
+  }, []);
+
+  const handleDelete = useCallback(async (id) => {
+    const bool = await deleteRole(id); 
+    if (bool) {
+      message.success('删除成功');
+      dispatch(getRoleListAction());
+    }
+  }, [dispatch]);
 
   const columns = [
     {
@@ -44,23 +65,23 @@ function RoleList() {
       )
     },
     {
-      title: '状态',
-      dataIndex: 'status',
-      render: (status) => (
-        <Switch checked={status} size='small' />
-      )
-    },
-    {
       title: '操作',
       key: 'action',
       width: 230,
       render: (value) => (
         <Fragment>
-          <Tag color='success'>编辑</Tag>
-          <Tag color='processing' onClick={ () => handle(value) }>
+          <Tag color='success' onClick={() => handleShowModal(value)}>编辑</Tag>
+          <Tag color='processing' onClick={() => handle(value)}>
             权限关联
           </Tag>
-          <Tag color='error'>删除</Tag>
+          <Popconfirm
+            title='确定要删除吗?'
+            okText='删除'
+            cancelText='取消'
+            onConfirm={() => handleDelete(value._id)}
+          >
+            <Tag color='error'>删除</Tag>
+          </Popconfirm>
         </Fragment>
       ),
     },
@@ -73,9 +94,13 @@ function RoleList() {
   return (
     <RoleListWrapper>
       <PageHeader className='page-header' title='角色列表' breadcrumb={{ routes: breadcrumb }} />
+      <div className='operation'>
+        <Button type='primary' onClick={() => handleShowModal()}>添加角色</Button>
+      </div>
       <Table columns={columns} dataSource={list} rowKey='_id' />
       {/* Modal */}
-      <AccessModal ref={accessModalRef} roleId={ currentRoleId } />
+      <AccessModal ref={accessModalRef} roleId={currentRoleId} />
+      <RoleModal ref={roleModalRef} data={roleData} />
     </RoleListWrapper>
   );
 }

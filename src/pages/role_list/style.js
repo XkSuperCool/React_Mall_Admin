@@ -5,4 +5,8 @@ export default styled.div`
     cursor: pointer;
     user-select: none;
   }
+
+  .operation {
+    margin: 10px 0;
+  }
 `;

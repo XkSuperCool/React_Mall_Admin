@@ -1,5 +1,6 @@
 import React, { memo, Suspense, useState } from 'react';
 import { renderRoutes } from 'react-router-config';
+import useRouterGuard from '@/hooks/useRouterGuard';
 
 import Context from './context';
 import Sidebar from './sidebar';
@@ -8,18 +9,6 @@ import MainWrapper from './style';
 
 function Main(props) {
   const [sidebarActive, setSidebarActive] = useState(false);
-
-  // useEffect(() => {
-  //   const admin_info = sessionStorage.getItem('admin_info');
-  //   if (admin_info === null) {
-  //     return props.history.push('/login');
-  //   }
-  //   const { role_id } = JSON.parse(admin_info);
-  //   getAdminAccessUrls(role_id).then(urls => {
-  //     setUrls(urls);
-  //   });
-  //   console.log(12312)
-  // }, [props]);
 
   return (
     <MainWrapper>
@@ -30,7 +19,9 @@ function Main(props) {
           <div className='main'>
             <Suspense fallback='loading...'>
               {
-                renderRoutes(props.route.routes)
+                renderRoutes(
+                  useRouterGuard(props.route.routes, true)
+                )
               }
             </Suspense>
           </div>
