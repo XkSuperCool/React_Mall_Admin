@@ -9,9 +9,11 @@ import useRouterGuard from './hooks/useRouterGuard';
 function App() {
   return (
     <HashRouter>
-      { renderRoutes(useRouterGuard(routes)) }
+      {
+        renderRoutes(useRouterGuard(routes))
+      }
     </HashRouter>
-  )
+  );
 }
 
 export default App;
