@@ -1,10 +1,11 @@
-import React, { memo, useState, useRef, useEffect, useCallback } from 'react';
+import React, { memo, useState, useRef, useEffect, useCallback, Fragment } from 'react';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 
-import { Table, Switch, Button, Tag, PageHeader } from 'antd';
+import { Table, Button, Tag, PageHeader, message } from 'antd';
 import AccessListWrapper from './style';
 import { AccessModal } from './components';
 import { getAccessListAction } from './store/actioncreators';
+import { deleteAccess } from '../../api/access';
 
 const typeMap = {
   0: '模块',
@@ -34,12 +35,27 @@ function AccessList() {
     dispatch(getAccessListAction());
   }, [dispatch]);
 
-  const handleDelete = useCallback(() => {
-    console.log('delete');
-  }, []);
+  const handleDelete = useCallback(async (value) => {
+    const res = await deleteAccess(value);
+    if (res) {
+      message.success('删除成功');
+      dispatch(getAccessListAction());
+    }
+  }, [dispatch]);
 
-  const handleEdit = useCallback(() => {
-    setAccess({ module_name: 1, })
+  const handleShowModal = useCallback((value) => {
+    if (typeof value === 'undefined') {
+      setAccess(null);
+    } else if (typeof value === 'object') {
+      const data = {};
+      for (let key of Object.keys(value)) {
+        if (key !== 'children') {
+          data[key] = value[key];
+        }
+      }
+      data.type = data.type.toString();
+      setAccess(data);
+    }
     accessModelRef.current.showModal();
   }, []);
 
@@ -79,25 +95,19 @@ function AccessList() {
       key: 'url'
     },
     {
-      title: '权限状态',
-      dataIndex: 'status',
-      key: 'status',
-      render: (status) => <Switch defaultChecked={ status }/>
-    },
-    {
       title: '操作',
-      dataIndex: 'operation',
-      width: 200,
-      render: () => {
+      key: 'action',
+      width: 100,
+      render: (value) => {
         return (
-          <>
-            <Tag color='processing' onClick={ handleEdit }>
+          <Fragment>
+            {/* <Tag color='processing' onClick={() => handleShowModal(value)}>
               编辑
-            </Tag>
-            <Tag color='error' onClick={ handleDelete }>
+            </Tag> */}
+            <Tag color='error' onClick={() => handleDelete(value)}>
               删除
             </Tag>
-          </>
+          </Fragment>
         );
       }
     }
@@ -108,8 +118,7 @@ function AccessList() {
       <PageHeader className='page-header' title='权限列表' breadcrumb={{ routes: breadcrumb }} />
       <AccessListWrapper>
         <div className='operation'>
-          <Button type='primary' onClick={ () => accessModelRef.current.showModal() }>添加权限</Button>
-          <Button type='ghost'>导出表格</Button>
+          <Button type='primary' onClick={ () => handleShowModal() }>添加权限</Button>
         </div>
         <Table
           rowKey='_id'

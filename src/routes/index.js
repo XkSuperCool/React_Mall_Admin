@@ -10,6 +10,7 @@ import NotFound from '../pages/not_found';
 const Home = lazy(() => import('../pages/home'));
 const AccessList = lazy(() => import('../pages/access_list'));
 const RoleList = lazy(() => import('../pages/role_list'));
+const AdminList = lazy(() => import('../pages/admin_list'));
 
 const routes = [
   {
@@ -40,6 +41,11 @@ const routes = [
         path: '/m/role/list',
         auth: true,
         component: RoleList
+      },
+      {
+        path: '/m/admin/list',
+        auth: true,
+        component: AdminList
       },
       {
         path: '*',

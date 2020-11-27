@@ -8,10 +8,11 @@ export default styled.div`
   .form {
     padding: 30px 20px;
     border-radius: 8px;
-    background-color: rgba(255, 255, 255, .7);
+    background-color: rgba(255, 255, 255, .9);
     position: absolute;
-    right: 10%;
+    left: 50%;
     top: 25%;
+    transform: translateX(-50%);
   }
 
   .ant-form-item-label {

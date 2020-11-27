@@ -13,7 +13,7 @@ function useRouterGuard(routes, authURL) {
     routesRef.current = routes.map(item => {
       const route = { ...item };
       if (route.auth) {
-        if (info.username === undefined) {
+        if (info.hasOwnProperty('username')) {
           route.render = () => <Redirect to='/login' />;
         } else if (route.render) {
           delete route.render;

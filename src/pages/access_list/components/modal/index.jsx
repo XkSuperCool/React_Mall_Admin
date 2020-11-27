@@ -1,4 +1,4 @@
-import React, { memo, Fragment, useCallback, useRef, useState, useImperativeHandle, forwardRef } from 'react';
+import React, { memo, Fragment, useCallback, useRef, useState, useImperativeHandle, forwardRef, useEffect } from 'react';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 
 import { getAccessListAction } from '../../store/actioncreators';
@@ -20,6 +20,17 @@ const AccessModal = forwardRef(({ data, onOk }, ref) => {
   useImperativeHandle(ref, () => ({
     showModal: () => setVisible(true)
   }), []);
+
+  useEffect(() => {
+    if (isData) {
+      form.setFieldsValue(data);
+      if (data.type !== 0) {
+        dispatch(getAccessListAction(data.type - 1));
+      }
+    } else {
+      form.resetFields();
+    }
+  }, [data, isData, form, dispatch]);
 
   const handleTypeChange = useCallback((e) => {
     const type = e.target.value;
@@ -59,6 +70,7 @@ const AccessModal = forwardRef(({ data, onOk }, ref) => {
       onOk={ () => formRef.current.submit() }
       onCancel={ onCancel }
       mask={ false }
+      forceRender={true}
     >
       <Form
         form={ form }
@@ -139,8 +151,8 @@ const AccessModal = forwardRef(({ data, onOk }, ref) => {
         </Form.Item>
         <Form.Item noStyle>
           <Row>
-            <Col span={ 12 } name='sort'>
-              <Form.Item label='排序'>
+            <Col span={ 12 }>
+              <Form.Item label='排序' name='sort'>
                 <InputNumber />
               </Form.Item>
             </Col>

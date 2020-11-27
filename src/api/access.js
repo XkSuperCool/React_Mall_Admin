@@ -25,6 +25,14 @@ export const addAccess = (data) => {
   });
 }
 
+export const deleteAccess = data => {
+  return request({
+    url: '/admin/access/delete',
+    data: data,
+    method: 'delete'
+  })
+}
+
 /**
  * 获取角色的权限 urls
  * @param {string} roleId 
